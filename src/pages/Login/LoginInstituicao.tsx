@@ -1,5 +1,5 @@
 import glowInstituicao from '../../assets/images/glow-instituicao.svg'
-import loginEscola from '../../assets/images/login-escola.jpg'
+import loginEscola from '../../assets/images/login-escola.png'
 import iconEyeHide from '../../assets/icons/icon-eye-hide.svg'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
