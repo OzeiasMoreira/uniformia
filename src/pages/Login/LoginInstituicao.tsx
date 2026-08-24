@@ -19,17 +19,8 @@ export function LoginInstituicao() {
   } = useLoginForm('instituicao')
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-r from-primary to-primary-dark px-6 py-12 lg:justify-start lg:pl-[10%]">
-      <div className="pointer-events-none absolute right-[-6%] top-1/2 hidden w-[43%] -translate-y-1/2 lg:block">
-        <img src={glowInstituicao} alt="" className="absolute inset-0 size-full" />
-        <img
-          src={loginEscola}
-          alt="Ilustração de uma escola"
-          className="relative aspect-square w-full rounded-full object-cover"
-        />
-      </div>
-
-      <div className="relative z-10 w-full max-w-[641px] rounded-[40px] border border-white/40 bg-white/30 p-10 backdrop-blur-[15px] sm:p-14">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-r from-primary to-primary-dark px-6 py-12 lg:justify-between lg:px-0">
+      <div className="relative z-10 w-full max-w-[641px] rounded-[40px] border border-white/40 bg-white/30 p-10 backdrop-blur-[15px] sm:p-14 lg:ml-[6.8%]">
         <p className="font-display text-2xl font-bold text-primary-dark">Bem-vindo (a)</p>
         <h1 className="mt-1 font-display text-[38px] font-bold text-text-strong">Login</h1>
 
@@ -76,6 +67,15 @@ export function LoginInstituicao() {
             Entrar
           </Button>
         </form>
+      </div>
+
+      <div className="relative hidden w-[43%] shrink-0 lg:mr-[7.5%] lg:block">
+        <img src={glowInstituicao} alt="" className="absolute inset-0 size-full" />
+        <img
+          src={loginEscola}
+          alt="Ilustração de uma escola"
+          className="relative aspect-square w-full rounded-full object-cover"
+        />
       </div>
     </div>
   )
