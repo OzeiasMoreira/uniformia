@@ -14,22 +14,42 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'bg-white text-navy' : 'text-white hover:bg-white/10'
   }`
 
-export function Sidebar() {
+interface SidebarProps {
+  open: boolean
+  onClose: () => void
+}
+
+export function Sidebar({ open, onClose }: SidebarProps) {
   return (
-    <aside className="flex w-[232px] shrink-0 flex-col gap-10 rounded-l-[26.88px] bg-sidebar px-6 py-10">
-      <img src={logo} alt="Uniformia" className="h-auto w-[160px] self-center rounded-2xl" />
-      <nav className="flex flex-1 flex-col gap-2">
-        {NAV_ITEMS.map(({ to, label, Icon }) => (
-          <NavLink key={to} to={to} className={navLinkClassName}>
-            <Icon className="size-5 shrink-0" />
-            <span>{label}</span>
-          </NavLink>
-        ))}
-      </nav>
-      <NavLink to="/settings" className={navLinkClassName}>
-        <SettingsIcon className="size-5 shrink-0" />
-        <span>Settings</span>
-      </NavLink>
-    </aside>
+    <>
+      {open && (
+        <button
+          type="button"
+          aria-label="Fechar menu"
+          onClick={onClose}
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 flex w-[232px] shrink-0 flex-col gap-10 bg-sidebar px-6 py-10 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 lg:rounded-l-[26.88px] ${
+          open ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <img src={logo} alt="Uniformia" className="h-auto w-[160px] self-center rounded-2xl" />
+        <nav className="flex flex-1 flex-col gap-2">
+          {NAV_ITEMS.map(({ to, label, Icon }) => (
+            <NavLink key={to} to={to} className={navLinkClassName} onClick={onClose}>
+              <Icon className="size-5 shrink-0" />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
+        <NavLink to="/settings" className={navLinkClassName} onClick={onClose}>
+          <SettingsIcon className="size-5 shrink-0" />
+          <span>Settings</span>
+        </NavLink>
+      </aside>
+    </>
   )
 }

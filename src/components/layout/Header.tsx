@@ -5,15 +5,28 @@ import iconSearch from '../../assets/icons/icon-search.svg'
 
 interface HeaderProps {
   institutionName: string
+  onMenuClick: () => void
 }
 
-export function Header({ institutionName }: HeaderProps) {
+export function Header({ institutionName, onMenuClick }: HeaderProps) {
   return (
-    <header className="flex h-[75.6px] shrink-0 items-center justify-between rounded-br-[20.16px] rounded-tr-[26.88px] bg-white px-10 shadow-[0px_3.36px_33.6px_0px_rgba(0,0,0,0.06)]">
-      <p className="font-app text-base font-bold text-navy">Olá, {institutionName}</p>
+    <header className="flex h-auto min-h-[75.6px] shrink-0 flex-wrap items-center justify-between gap-4 rounded-br-[20.16px] rounded-tr-[26.88px] bg-white px-4 py-3 shadow-[0px_3.36px_33.6px_0px_rgba(0,0,0,0.06)] sm:px-10">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          aria-label="Abrir menu"
+          onClick={onMenuClick}
+          className="flex flex-col justify-center gap-1 lg:hidden"
+        >
+          <span className="h-0.5 w-5 rounded-full bg-navy" />
+          <span className="h-0.5 w-5 rounded-full bg-navy" />
+          <span className="h-0.5 w-5 rounded-full bg-navy" />
+        </button>
+        <p className="font-app text-sm font-bold text-navy sm:text-base">Olá, {institutionName}</p>
+      </div>
 
-      <div className="flex items-center gap-6">
-        <label className="relative flex h-[33.6px] w-[280px] items-center rounded-[8.4px] border-[0.84px] border-[rgba(204,204,204,0.74)] px-4">
+      <div className="flex items-center gap-4 sm:gap-6">
+        <label className="relative hidden h-[33.6px] items-center rounded-[8.4px] border-[0.84px] border-[rgba(204,204,204,0.74)] px-4 sm:flex sm:w-[200px] lg:w-[280px]">
           <img src={iconSearch} alt="" className="size-3" />
           <input
             type="search"
