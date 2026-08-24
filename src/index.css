@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@400;500;700;800&family=Abhaya+Libre:wght@400;500;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: '42dot Sans', system-ui, sans-serif;
+  --font-body: 'Abhaya Libre', serif;
+  --font-app: 'Poppins', system-ui, sans-serif;
+
+  --color-primary-dark: #095796;
+  --color-primary: #6196c1;
+  --color-navy: #0f296d;
+  --color-navy-light: #12295f;
+  --color-text-strong: #2a1e17;
+  --color-text-muted: #393d54;
+  --color-placeholder: #bcbec0;
+  --color-danger: #f1554c;
+  --color-danger-light: #ffa5a0;
+  --color-bg-gradient-from: #bad5f9;
+  --color-bg-gradient-to: #a9dcdd;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-app);
+  color: var(--color-text-muted);
+}
