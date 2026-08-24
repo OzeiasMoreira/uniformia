@@ -26,6 +26,14 @@ export function DonutChart({ segments, centerValue, centerLabel, size = 180 }: D
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="#f0f0f0"
+          strokeWidth={STROKE_WIDTH}
+        />
         {segments.map((segment, index) => (
           <circle
             key={segment.label}

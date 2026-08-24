@@ -118,27 +118,33 @@ export function Dashboard() {
               Julho - 2026
             </span>
           </div>
-          <div className="mt-6 flex flex-wrap gap-4">
-            {data.alunosQueRetiraram.map((aluno) => (
-              <div
-                key={aluno.nome}
-                className="relative flex w-[147px] flex-col items-center gap-2 rounded-[19px] px-4 pb-5 pt-6"
-                style={{ backgroundColor: aluno.corCard }}
-              >
-                <img src={iconDumbbell} alt="" className="absolute right-3 top-3 size-6 opacity-70" />
-                {aluno.avatar ? (
-                  <Avatar src={aluno.avatar} alt={aluno.nome} size={41} />
-                ) : (
-                  <div className="flex size-[41px] items-center justify-center rounded-full bg-white/40 font-app text-sm font-bold text-white">
-                    {aluno.nome.charAt(0)}
-                  </div>
-                )}
-                <p className="font-app text-sm font-bold text-white">{aluno.nome}</p>
-                <p className="-mt-1 font-app text-[10px] text-white">{aluno.turma}</p>
-                <Badge>{aluno.badge}</Badge>
-              </div>
-            ))}
-          </div>
+          {data.alunosQueRetiraram.length === 0 ? (
+            <p className="mt-6 font-app text-sm text-text-muted/70">
+              Nenhum aluno retirou uniforme ainda.
+            </p>
+          ) : (
+            <div className="mt-6 flex flex-wrap gap-4">
+              {data.alunosQueRetiraram.map((aluno) => (
+                <div
+                  key={aluno.nome}
+                  className="relative flex w-[147px] flex-col items-center gap-2 rounded-[19px] px-4 pb-5 pt-6"
+                  style={{ backgroundColor: aluno.corCard }}
+                >
+                  <img src={iconDumbbell} alt="" className="absolute right-3 top-3 size-6 opacity-70" />
+                  {aluno.avatar ? (
+                    <Avatar src={aluno.avatar} alt={aluno.nome} size={41} />
+                  ) : (
+                    <div className="flex size-[41px] items-center justify-center rounded-full bg-white/40 font-app text-sm font-bold text-white">
+                      {aluno.nome.charAt(0)}
+                    </div>
+                  )}
+                  <p className="font-app text-sm font-bold text-white">{aluno.nome}</p>
+                  <p className="-mt-1 font-app text-[10px] text-white">{aluno.turma}</p>
+                  <Badge>{aluno.badge}</Badge>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
     </div>
