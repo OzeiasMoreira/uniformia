@@ -7,11 +7,26 @@ import { Badge } from '../../components/ui/Badge'
 import { BarChart } from '../../components/ui/BarChart'
 import { Card } from '../../components/ui/Card'
 import { DonutChart } from '../../components/ui/DonutChart'
+import { ErrorState } from '../../components/ui/ErrorState'
+import { Spinner } from '../../components/ui/Spinner'
 import { StatCard } from '../../components/ui/StatCard'
-import { DASHBOARD_MOCK } from '../../mocks/dashboard.mock'
+import { useAsyncData } from '../../hooks/useAsyncData'
+import { getDashboardData } from '../../services/dashboard'
 
 export function Dashboard() {
-  const data = DASHBOARD_MOCK
+  const { data, loading, error } = useAsyncData(getDashboardData)
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-24">
+        <Spinner />
+      </div>
+    )
+  }
+
+  if (error || !data) {
+    return <ErrorState description={error ?? undefined} />
+  }
 
   return (
     <div className="flex flex-col gap-6">
