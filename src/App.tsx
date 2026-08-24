@@ -1,8 +1,13 @@
+import { BrowserRouter } from 'react-router-dom'
+import { AuthenticatedLayout } from './layouts/AuthenticatedLayout'
+
 function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-bg-gradient-from to-bg-gradient-to font-app">
-      <p className="text-navy text-lg">Uniformia — em construção</p>
-    </div>
+    <BrowserRouter>
+      <AuthenticatedLayout institutionName="Universidade Estadual do Norte do Paraná">
+        <p className="font-app text-navy">Conteúdo da página</p>
+      </AuthenticatedLayout>
+    </BrowserRouter>
   )
 }
 
