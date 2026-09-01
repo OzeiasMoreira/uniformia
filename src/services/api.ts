@@ -32,13 +32,19 @@ api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
-      const status = error.response?.status ?? 0
+      if (!error.response) {
+        return Promise.reject(
+          new ApiError(0, 'Não foi possível conectar ao servidor. Verifique se a API está rodando.'),
+        )
+      }
+
+      const status = error.response.status
 
       if (status === 401) {
         clearToken()
       }
 
-      const message = error.response?.data?.message ?? 'Não foi possível completar a requisição.'
+      const message = error.response.data?.message ?? 'Não foi possível completar a requisição.'
       return Promise.reject(new ApiError(status, message))
     }
 

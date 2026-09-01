@@ -34,6 +34,7 @@ export function CadastroInstituicao() {
             label="Nome da instituição"
             name="nome"
             placeholder="Escola Estadual Monteiro Lobato"
+            autoComplete="organization"
             value={nome}
             onChange={(event) => setNome(event.target.value)}
             required
@@ -43,6 +44,7 @@ export function CadastroInstituicao() {
             label="CNPJ"
             name="cnpj"
             placeholder="12.345.678/0001-90"
+            autoComplete="off"
             value={cnpj}
             onChange={(event) => setCnpj(event.target.value)}
             required
@@ -54,6 +56,7 @@ export function CadastroInstituicao() {
               name="senha"
               type={mostrarSenha ? 'text' : 'password'}
               placeholder="Mínimo 8 caracteres"
+              autoComplete="new-password"
               value={senha}
               onChange={(event) => setSenha(event.target.value)}
               required
@@ -73,6 +76,7 @@ export function CadastroInstituicao() {
             name="confirmarSenha"
             type={mostrarSenha ? 'text' : 'password'}
             placeholder="Repita a senha"
+            autoComplete="new-password"
             value={confirmarSenha}
             onChange={(event) => setConfirmarSenha(event.target.value)}
             required
