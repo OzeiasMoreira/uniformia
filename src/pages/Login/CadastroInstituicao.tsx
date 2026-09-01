@@ -4,34 +4,47 @@ import loginEscola from '../../assets/images/login-escola.png'
 import iconEyeHide from '../../assets/icons/icon-eye-hide.svg'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { useLoginForm } from '../../hooks/useLoginForm'
+import { useCadastroInstituicaoForm } from '../../hooks/useCadastroInstituicaoForm'
 
-export function LoginInstituicao() {
+export function CadastroInstituicao() {
   const {
-    identificador,
-    setIdentificador,
+    nome,
+    setNome,
+    cnpj,
+    setCnpj,
     senha,
     setSenha,
+    confirmarSenha,
+    setConfirmarSenha,
     mostrarSenha,
     setMostrarSenha,
     loading,
     error,
     handleSubmit,
-  } = useLoginForm('instituicao')
+  } = useCadastroInstituicaoForm()
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-r from-primary to-primary-dark px-6 py-12 lg:justify-between lg:px-0">
       <div className="relative z-10 w-full max-w-[641px] rounded-[40px] border border-white/40 bg-white/30 p-10 backdrop-blur-[15px] sm:p-14 lg:ml-[6.8%]">
         <p className="font-display text-2xl font-bold text-primary-dark">Bem-vindo (a)</p>
-        <h1 className="mt-1 font-display text-[38px] font-bold text-text-strong">Login</h1>
+        <h1 className="mt-1 font-display text-[38px] font-bold text-text-strong">Criar conta</h1>
 
         <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-6">
           <Input
-            label="Email"
-            name="identificador"
-            placeholder="CNPJ da instituição"
-            value={identificador}
-            onChange={(event) => setIdentificador(event.target.value)}
+            label="Nome da instituição"
+            name="nome"
+            placeholder="Escola Estadual Monteiro Lobato"
+            value={nome}
+            onChange={(event) => setNome(event.target.value)}
+            required
+          />
+
+          <Input
+            label="CNPJ"
+            name="cnpj"
+            placeholder="12.345.678/0001-90"
+            value={cnpj}
+            onChange={(event) => setCnpj(event.target.value)}
             required
           />
 
@@ -40,7 +53,7 @@ export function LoginInstituicao() {
               label="Senha"
               name="senha"
               type={mostrarSenha ? 'text' : 'password'}
-              placeholder="Senha"
+              placeholder="Mínimo 8 caracteres"
               value={senha}
               onChange={(event) => setSenha(event.target.value)}
               required
@@ -55,25 +68,28 @@ export function LoginInstituicao() {
             </button>
           </div>
 
-          <button
-            type="button"
+          <Input
+            label="Confirmar senha"
+            name="confirmarSenha"
+            type={mostrarSenha ? 'text' : 'password'}
+            placeholder="Repita a senha"
+            value={confirmarSenha}
+            onChange={(event) => setConfirmarSenha(event.target.value)}
+            required
+          />
+
+          <Link
+            to="/login/instituicao"
             className="self-start font-body text-lg text-text-strong hover:underline"
           >
-            Esqueceu sua senha?
-          </button>
+            Já tem uma conta? Entrar
+          </Link>
 
           {error && <p className="font-app text-sm text-danger">{error}</p>}
 
           <Button type="submit" loading={loading} className="mt-2">
-            Entrar
+            Criar conta
           </Button>
-
-          <Link
-            to="/login/instituicao/cadastro"
-            className="self-center font-body text-sm text-text-strong hover:underline"
-          >
-            Ainda não tem uma conta? Criar conta
-          </Link>
         </form>
       </div>
 

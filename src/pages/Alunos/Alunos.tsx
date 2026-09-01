@@ -1,4 +1,7 @@
+import { useState } from 'react'
+import { CadastroAlunoModal } from '../../components/forms/CadastroAlunoModal'
 import { AlunoRow } from '../../components/tables/AlunoRow'
+import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { EmptyState } from '../../components/ui/EmptyState'
 import { ErrorState } from '../../components/ui/ErrorState'
@@ -8,10 +11,16 @@ import { getAlunos } from '../../services/alunos'
 
 export function Alunos() {
   const { data: alunos, loading, error } = useAsyncData(getAlunos)
+  const [modalAberto, setModalAberto] = useState(false)
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-app text-2xl font-bold text-navy">ALUNOS MATRICULADOS:</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="font-app text-2xl font-bold text-navy">ALUNOS MATRICULADOS:</h1>
+        <Button onClick={() => setModalAberto(true)} className="!h-[44px] !w-auto !px-6">
+          Cadastrar aluno
+        </Button>
+      </div>
 
       {loading && (
         <div className="flex justify-center py-24">
@@ -37,6 +46,8 @@ export function Alunos() {
             ))}
           </Card>
         ))}
+
+      <CadastroAlunoModal open={modalAberto} onClose={() => setModalAberto(false)} />
     </div>
   )
 }
