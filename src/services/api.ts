@@ -44,7 +44,10 @@ api.interceptors.response.use(
         clearToken()
       }
 
-      const message = error.response.data?.message ?? 'Não foi possível completar a requisição.'
+      const message =
+        status >= 500
+          ? 'Ocorreu um erro no servidor. Tente novamente mais tarde.'
+          : (error.response.data?.message ?? 'Não foi possível completar a requisição.')
       return Promise.reject(new ApiError(status, message))
     }
 
