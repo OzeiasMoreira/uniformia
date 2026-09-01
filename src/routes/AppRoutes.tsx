@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout'
 import { Alunos } from '../pages/Alunos/Alunos'
-import { CadastroInstituicao } from '../pages/Login/CadastroInstituicao'
 import { Dashboard } from '../pages/Dashboard/Dashboard'
 import { LoginAluno } from '../pages/Login/LoginAluno'
 import { LoginInstituicao } from '../pages/Login/LoginInstituicao'
@@ -27,7 +26,6 @@ export function AppRoutes() {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginSelecao />} />
       <Route path="/login/instituicao" element={<LoginInstituicao />} />
-      <Route path="/login/instituicao/cadastro" element={<CadastroInstituicao />} />
       <Route path="/login/aluno" element={<LoginAluno />} />
       <Route
         path="/dashboard"

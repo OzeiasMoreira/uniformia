@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import glowInstituicao from '../../assets/images/glow-instituicao.svg'
 import loginEscola from '../../assets/images/login-escola.png'
 import iconEyeHide from '../../assets/icons/icon-eye-hide.svg'
@@ -69,13 +68,6 @@ export function LoginInstituicao() {
           <Button type="submit" loading={loading} className="mt-2">
             Entrar
           </Button>
-
-          <Link
-            to="/login/instituicao/cadastro"
-            className="self-center font-body text-sm text-text-strong hover:underline"
-          >
-            Ainda não tem uma conta? Criar conta
-          </Link>
         </form>
       </div>
 
