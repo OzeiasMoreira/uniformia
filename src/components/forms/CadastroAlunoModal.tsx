@@ -1,23 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import { createClassroom } from '../../services/classroom.service'
+import { createClassroom, getClassrooms } from '../../services/classroom.service'
 import { createStudent } from '../../services/student.service'
+import type { ClassroomOption } from '../../types/classroom'
 import type { StudentSummary } from '../../types/student'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 import { Modal } from '../ui/Modal'
+import { Select } from '../ui/Select'
 
 interface CadastroAlunoModalProps {
   open: boolean
   onClose: () => void
+  onSuccess?: () => void
 }
 
-export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
+export function CadastroAlunoModal({ open, onClose, onSuccess }: CadastroAlunoModalProps) {
   const { institution } = useAuth()
+  const institutionId = institution?.id ?? ''
 
-  const [turmaNome, setTurmaNome] = useState('')
+  const [turmas, setTurmas] = useState<ClassroomOption[]>([])
   const [turmaId, setTurmaId] = useState('')
+  const [turmaNome, setTurmaNome] = useState('')
   const [turmaLoading, setTurmaLoading] = useState(false)
   const [turmaError, setTurmaError] = useState<string | null>(null)
   const [turmaCriada, setTurmaCriada] = useState<string | null>(null)
@@ -29,16 +34,38 @@ export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
   const [alunoError, setAlunoError] = useState<string | null>(null)
   const [alunoCriado, setAlunoCriado] = useState<StudentSummary | null>(null)
 
+  useEffect(() => {
+    if (!open || !institutionId) return
+
+    let active = true
+    getClassrooms(institutionId)
+      .then((result) => {
+        if (active) setTurmas(result)
+      })
+      .catch((err: unknown) => {
+        if (active) {
+          setTurmaError(err instanceof Error ? err.message : 'Não foi possível carregar as turmas.')
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [open, institutionId])
+
   async function handleCriarTurma(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!institution) return
+    if (!institutionId) return
 
     setTurmaError(null)
+    setTurmaCriada(null)
     setTurmaLoading(true)
     try {
-      const classroom = await createClassroom(institution.id, { name: turmaNome })
+      const classroom = await createClassroom(institutionId, { name: turmaNome })
+      setTurmas((current) => [...current, { id: classroom.id, name: classroom.name }])
       setTurmaId(classroom.id)
       setTurmaCriada(classroom.name)
+      setTurmaNome('')
     } catch (err) {
       setTurmaError(err instanceof Error ? err.message : 'Não foi possível criar a turma.')
     } finally {
@@ -48,12 +75,13 @@ export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
 
   async function handleCadastrarAluno(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!institution) return
+    if (!institutionId) return
 
     setAlunoError(null)
+    setAlunoCriado(null)
     setAlunoLoading(true)
     try {
-      const student = await createStudent(institution.id, {
+      const student = await createStudent(institutionId, {
         name: nome,
         enrollment: matricula,
         senha,
@@ -63,6 +91,7 @@ export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
       setNome('')
       setMatricula('')
       setSenha('')
+      onSuccess?.()
     } catch (err) {
       setAlunoError(err instanceof Error ? err.message : 'Não foi possível cadastrar o aluno.')
     } finally {
@@ -82,40 +111,50 @@ export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
 
   return (
     <Modal open={open} onClose={onClose} title="Cadastrar aluno">
-      <div className="flex flex-col gap-8">
-        <form onSubmit={handleCriarTurma} className="flex flex-col gap-4">
+      <div className="flex max-h-[70vh] flex-col gap-8 overflow-y-auto pr-1">
+        <div className="flex flex-col gap-4">
           <p className="font-app text-sm font-semibold text-navy">1. Turma</p>
 
-          <Input
-            label="Nome da turma"
-            name="turmaNome"
-            placeholder="1º Ano A"
-            value={turmaNome}
-            onChange={(event) => setTurmaNome(event.target.value)}
-            className="!h-[48px] !text-sm"
-            required
-          />
-
-          <Input
-            label="ID da turma (preenchido automaticamente ao criar)"
+          <Select
+            label="Turma do aluno"
             name="turmaId"
-            placeholder="UUID da turma"
             value={turmaId}
             onChange={(event) => setTurmaId(event.target.value)}
-            className="!h-[48px] !text-sm"
-          />
+          >
+            <option value="">Selecione uma turma...</option>
+            {turmas.map((turma) => (
+              <option key={turma.id} value={turma.id}>
+                {turma.name}
+              </option>
+            ))}
+          </Select>
 
-          {turmaError && <p className="font-app text-sm text-danger">{turmaError}</p>}
-          {turmaCriada && (
-            <p className="font-app text-sm text-navy">Turma "{turmaCriada}" criada.</p>
-          )}
+          <form onSubmit={handleCriarTurma} className="flex flex-col gap-3">
+            <Input
+              label="Ou crie uma nova turma"
+              name="turmaNome"
+              placeholder="1º Ano A"
+              value={turmaNome}
+              onChange={(event) => setTurmaNome(event.target.value)}
+              className="!h-[48px] border border-[#e0e0e0] !text-sm"
+              required
+            />
 
-          <Button type="submit" loading={turmaLoading} className="!h-[48px]">
-            Criar turma
-          </Button>
-        </form>
+            {turmaError && <p className="font-app text-sm text-danger">{turmaError}</p>}
+            {turmaCriada && (
+              <p className="font-app text-sm text-navy">Turma "{turmaCriada}" criada e selecionada.</p>
+            )}
 
-        <form onSubmit={handleCadastrarAluno} className="flex flex-col gap-4 border-t border-[#f0f0f0] pt-6">
+            <Button type="submit" loading={turmaLoading} className="!h-[48px]">
+              Criar turma
+            </Button>
+          </form>
+        </div>
+
+        <form
+          onSubmit={handleCadastrarAluno}
+          className="flex flex-col gap-4 border-t border-[#f0f0f0] pt-6"
+        >
           <p className="font-app text-sm font-semibold text-navy">2. Aluno</p>
 
           <Input
@@ -123,7 +162,7 @@ export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
             name="nome"
             value={nome}
             onChange={(event) => setNome(event.target.value)}
-            className="!h-[48px] !text-sm"
+            className="!h-[48px] border border-[#e0e0e0] !text-sm"
             required
           />
           <Input
@@ -131,16 +170,17 @@ export function CadastroAlunoModal({ open, onClose }: CadastroAlunoModalProps) {
             name="matricula"
             value={matricula}
             onChange={(event) => setMatricula(event.target.value)}
-            className="!h-[48px] !text-sm"
+            className="!h-[48px] border border-[#e0e0e0] !text-sm"
             required
           />
           <Input
             label="Senha"
             name="senha"
             type="password"
+            autoComplete="new-password"
             value={senha}
             onChange={(event) => setSenha(event.target.value)}
-            className="!h-[48px] !text-sm"
+            className="!h-[48px] border border-[#e0e0e0] !text-sm"
             required
           />
 

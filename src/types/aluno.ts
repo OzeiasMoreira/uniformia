@@ -1,7 +1,25 @@
 export interface Aluno {
-  id: number
-  nome: string
-  turma: string
-  matricula: string
-  uniformeRetirado: boolean
+  id: string
+  name: string
+  enrollment: string
+  classroomId: string
+  classroom: {
+    id: string
+    name: string
+  }
+  createdAt: string
+}
+
+export interface AlunoListResponse {
+  students: Aluno[]
+  total: number
+  page: number
+  perPage: number
+}
+
+export interface UpdateAlunoInput {
+  name?: string
+  enrollment?: string
+  classroomId?: string
+  senha?: string
 }

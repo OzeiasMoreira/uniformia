@@ -6,6 +6,11 @@ export interface Classroom {
   updatedAt: string
 }
 
+export interface ClassroomOption {
+  id: string
+  name: string
+}
+
 export interface CreateClassroomInput {
   name: string
 }
