@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout'
 import { Alunos } from '../pages/Alunos/Alunos'
 import { Dashboard } from '../pages/Dashboard/Dashboard'
+import { Entregas } from '../pages/Entregas/Entregas'
 import { LoginAluno } from '../pages/Login/LoginAluno'
 import { LoginInstituicao } from '../pages/Login/LoginInstituicao'
 import { LoginSelecao } from '../pages/Login/LoginSelecao'
@@ -48,6 +49,14 @@ export function AppRoutes() {
         element={
           <AppShell>
             <Pedidos />
+          </AppShell>
+        }
+      />
+      <Route
+        path="/entregas"
+        element={
+          <AppShell>
+            <Entregas />
           </AppShell>
         }
       />

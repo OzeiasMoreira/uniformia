@@ -1,11 +1,19 @@
 import { NavLink } from 'react-router-dom'
 import logo from '../../assets/logos/uniformia-logo.svg'
-import { AlunosIcon, DashboardIcon, PedidosIcon, SettingsIcon, UniformesIcon } from '../ui/icons'
+import {
+  AlunosIcon,
+  DashboardIcon,
+  EntregasIcon,
+  PedidosIcon,
+  SettingsIcon,
+  UniformesIcon,
+} from '../ui/icons'
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', Icon: DashboardIcon },
   { to: '/alunos', label: 'Alunos Matriculados', Icon: AlunosIcon },
   { to: '/pedidos', label: 'Pedidos', Icon: PedidosIcon },
+  { to: '/entregas', label: 'Entregas', Icon: EntregasIcon },
   { to: '/uniformes', label: 'Uniformes', Icon: UniformesIcon },
 ]
 
