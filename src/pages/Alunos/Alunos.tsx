@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { CadastroAlunoModal } from '../../components/forms/CadastroAlunoModal'
 import { EditarAlunoModal } from '../../components/forms/EditarAlunoModal'
 import { AlunoRow } from '../../components/tables/AlunoRow'
@@ -7,12 +7,17 @@ import { Card } from '../../components/ui/Card'
 import { EmptyState } from '../../components/ui/EmptyState'
 import { ErrorState } from '../../components/ui/ErrorState'
 import { Modal } from '../../components/ui/Modal'
+import { Select } from '../../components/ui/Select'
 import { Spinner } from '../../components/ui/Spinner'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useAuth } from '../../hooks/useAuth'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import { deleteAluno, getAlunos } from '../../services/alunos'
+import { getClassrooms } from '../../services/classroom.service'
 import type { Aluno, AlunoListResponse } from '../../types/aluno'
+import type { ClassroomOption } from '../../types/classroom'
+
+const PER_PAGE = 20
 
 const EMPTY_RESPONSE: AlunoListResponse = { students: [], total: 0, page: 1, perPage: 0 }
 
@@ -21,14 +26,39 @@ export function Alunos() {
   const institutionId = institution?.id ?? ''
 
   const [busca, setBusca] = useState('')
+  const [turmaFiltro, setTurmaFiltro] = useState('')
+  const [page, setPage] = useState(1)
+  const [turmas, setTurmas] = useState<ClassroomOption[]>([])
   const buscaDebounced = useDebouncedValue(busca.trim())
+
+  useEffect(() => {
+    if (!institutionId) return
+
+    let active = true
+    getClassrooms(institutionId)
+      .then((result) => {
+        if (active) setTurmas(result)
+      })
+      .catch(() => {
+        if (active) setTurmas([])
+      })
+
+    return () => {
+      active = false
+    }
+  }, [institutionId])
 
   const fetcher = useCallback(
     () =>
       institutionId
-        ? getAlunos(institutionId, { search: buscaDebounced || undefined })
+        ? getAlunos(institutionId, {
+            search: buscaDebounced || undefined,
+            classroomId: turmaFiltro || undefined,
+            page,
+            perPage: PER_PAGE,
+          })
         : Promise.resolve(EMPTY_RESPONSE),
-    [institutionId, buscaDebounced],
+    [institutionId, buscaDebounced, turmaFiltro, page],
   )
   const { data, loading, error, refetch } = useAsyncData(fetcher)
 
@@ -37,6 +67,24 @@ export function Alunos() {
   const [alunoExcluindo, setAlunoExcluindo] = useState<Aluno | null>(null)
   const [excluindo, setExcluindo] = useState(false)
   const [erroExclusao, setErroExclusao] = useState<string | null>(null)
+
+  const temFiltro = Boolean(busca.trim() || turmaFiltro)
+
+  function handleBusca(value: string) {
+    setBusca(value)
+    setPage(1)
+  }
+
+  function handleTurma(value: string) {
+    setTurmaFiltro(value)
+    setPage(1)
+  }
+
+  function limparFiltros() {
+    setBusca('')
+    setTurmaFiltro('')
+    setPage(1)
+  }
 
   function fecharExclusao() {
     setAlunoExcluindo(null)
@@ -51,7 +99,11 @@ export function Alunos() {
     try {
       await deleteAluno(institutionId, alunoExcluindo.id)
       fecharExclusao()
-      refetch()
+      if (page > 1 && (data?.students.length ?? 0) <= 1) {
+        setPage(page - 1)
+      } else {
+        refetch()
+      }
     } catch (err) {
       setErroExclusao(err instanceof Error ? err.message : 'Não foi possível excluir o aluno.')
     } finally {
@@ -60,6 +112,7 @@ export function Alunos() {
   }
 
   const alunos = data?.students ?? []
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / PER_PAGE)) : 1
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,14 +123,37 @@ export function Alunos() {
         </Button>
       </div>
 
-      <input
-        type="search"
-        aria-label="Buscar aluno"
-        placeholder="Buscar por nome ou matrícula..."
-        value={busca}
-        onChange={(event) => setBusca(event.target.value)}
-        className="h-[44px] w-full max-w-[420px] rounded-lg border border-[#e0e0e0] bg-white px-4 font-app text-sm text-text-muted outline-none placeholder:text-placeholder focus:ring-2 focus:ring-primary-dark"
-      />
+      <div className="flex flex-wrap items-end gap-4">
+        <input
+          type="search"
+          aria-label="Buscar aluno"
+          placeholder="Buscar por nome ou matrícula..."
+          value={busca}
+          onChange={(event) => handleBusca(event.target.value)}
+          className="h-[48px] w-full max-w-[420px] rounded-lg border border-[#e0e0e0] bg-white px-4 font-app text-sm text-text-muted outline-none placeholder:text-placeholder focus:ring-2 focus:ring-primary-dark"
+        />
+        <Select
+          aria-label="Filtrar por turma"
+          value={turmaFiltro}
+          onChange={(event) => handleTurma(event.target.value)}
+        >
+          <option value="">Todas as turmas</option>
+          {turmas.map((turma) => (
+            <option key={turma.id} value={turma.id}>
+              {turma.name}
+            </option>
+          ))}
+        </Select>
+        {temFiltro && (
+          <button
+            type="button"
+            onClick={limparFiltros}
+            className="h-[48px] rounded-lg px-4 font-app text-sm font-semibold text-primary-dark hover:bg-primary-dark/10"
+          >
+            Limpar filtros
+          </button>
+        )}
+      </div>
 
       {!institutionId && (
         <EmptyState
@@ -101,10 +177,10 @@ export function Alunos() {
         data &&
         (alunos.length === 0 ? (
           <EmptyState
-            title={buscaDebounced ? 'Nenhum aluno encontrado' : 'Nenhum aluno matriculado'}
+            title={temFiltro ? 'Nenhum aluno encontrado' : 'Nenhum aluno matriculado'}
             description={
-              buscaDebounced
-                ? 'Tente buscar por outro nome ou matrícula.'
+              temFiltro
+                ? 'Nenhum aluno corresponde à busca ou à turma selecionada. Tente outros filtros.'
                 : 'Cadastre alunos para vê-los aqui.'
             }
           />
@@ -123,11 +199,34 @@ export function Alunos() {
                 />
               ))}
             </Card>
-            {data.total > alunos.length && (
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="font-app text-sm text-text-muted">
-                Mostrando {alunos.length} de {data.total} alunos. Use a busca para refinar.
+                {data.total} {data.total === 1 ? 'aluno encontrado' : 'alunos encontrados'}
               </p>
-            )}
+              {totalPages > 1 && (
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPage(page - 1)}
+                    disabled={page <= 1}
+                    className="rounded-lg border border-[#e0e0e0] bg-white px-4 py-2 font-app text-sm font-semibold text-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Anterior
+                  </button>
+                  <span className="font-app text-sm text-text-muted">
+                    Página {page} de {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPage(page + 1)}
+                    disabled={page >= totalPages}
+                    className="rounded-lg border border-[#e0e0e0] bg-white px-4 py-2 font-app text-sm font-semibold text-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Próxima
+                  </button>
+                </div>
+              )}
+            </div>
           </>
         ))}
 
