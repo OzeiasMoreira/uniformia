@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout'
 import { Alunos } from '../pages/Alunos/Alunos'
 import { Dashboard } from '../pages/Dashboard/Dashboard'
+import { Entregas } from '../pages/Entregas/Entregas'
 import { LoginAluno } from '../pages/Login/LoginAluno'
 import { LoginInstituicao } from '../pages/Login/LoginInstituicao'
 import { LoginSelecao } from '../pages/Login/LoginSelecao'
@@ -10,10 +12,13 @@ import { Pedidos } from '../pages/Pedidos/Pedidos'
 import { Settings } from '../pages/Settings/Settings'
 import { Uniformes } from '../pages/Uniformes/Uniformes'
 
-const MOCK_INSTITUTION_NAME = 'Universidade Estadual do Norte do Paraná'
-
 function AppShell({ children }: { children: ReactNode }) {
-  return <AuthenticatedLayout institutionName={MOCK_INSTITUTION_NAME}>{children}</AuthenticatedLayout>
+  const { institution } = useAuth()
+  return (
+    <AuthenticatedLayout institutionName={institution?.name ?? 'Instituição'}>
+      {children}
+    </AuthenticatedLayout>
+  )
 }
 
 export function AppRoutes() {
@@ -44,6 +49,14 @@ export function AppRoutes() {
         element={
           <AppShell>
             <Pedidos />
+          </AppShell>
+        }
+      />
+      <Route
+        path="/entregas"
+        element={
+          <AppShell>
+            <Entregas />
           </AppShell>
         }
       />

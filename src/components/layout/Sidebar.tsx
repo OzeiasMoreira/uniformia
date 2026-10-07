@@ -1,11 +1,19 @@
 import { NavLink } from 'react-router-dom'
 import logo from '../../assets/logos/uniformia-logo.svg'
-import { AlunosIcon, DashboardIcon, PedidosIcon, SettingsIcon, UniformesIcon } from '../ui/icons'
+import {
+  AlunosIcon,
+  DashboardIcon,
+  EntregasIcon,
+  PedidosIcon,
+  SettingsIcon,
+  UniformesIcon,
+} from '../ui/icons'
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', Icon: DashboardIcon },
   { to: '/alunos', label: 'Alunos Matriculados', Icon: AlunosIcon },
   { to: '/pedidos', label: 'Pedidos', Icon: PedidosIcon },
+  { to: '/entregas', label: 'Entregas', Icon: EntregasIcon },
   { to: '/uniformes', label: 'Uniformes', Icon: UniformesIcon },
 ]
 
@@ -32,7 +40,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-[232px] shrink-0 flex-col gap-10 bg-sidebar px-6 py-10 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 lg:rounded-l-[26.88px] ${
+        className={`fixed inset-y-0 left-0 z-30 flex w-[232px] shrink-0 flex-col gap-10 bg-sidebar px-6 py-10 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

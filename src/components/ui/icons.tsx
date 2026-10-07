@@ -73,3 +73,14 @@ export function SettingsIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function EntregasIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M12 2 3 6.5v11L12 22l9-4.5v-11L12 2Zm0 2.24 6.2 3.1L12 10.44 5.8 7.34 12 4.24ZM5 9.12l6 3v7.64l-6-3V9.12Zm8 10.64v-7.64l6-3v7.64l-6 3Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}

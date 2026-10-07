@@ -26,9 +26,10 @@ export function LoginInstituicao() {
 
         <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-6">
           <Input
-            label="Email"
+            label="CNPJ"
             name="identificador"
             placeholder="CNPJ da instituição"
+            autoComplete="off"
             value={identificador}
             onChange={(event) => setIdentificador(event.target.value)}
             required
@@ -40,6 +41,7 @@ export function LoginInstituicao() {
               name="senha"
               type={mostrarSenha ? 'text' : 'password'}
               placeholder="Senha"
+              autoComplete="current-password"
               value={senha}
               onChange={(event) => setSenha(event.target.value)}
               required

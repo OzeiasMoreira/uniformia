@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ institutionName, onMenuClick }: HeaderProps) {
   return (
-    <header className="flex h-auto min-h-[75.6px] shrink-0 flex-wrap items-center justify-between gap-4 rounded-br-[20.16px] rounded-tr-[26.88px] bg-white px-4 py-3 shadow-[0px_3.36px_33.6px_0px_rgba(0,0,0,0.06)] sm:px-10">
+    <header className="flex h-auto min-h-[75.6px] shrink-0 flex-wrap items-center justify-between gap-4 rounded-br-[20.16px]bg-white px-4 py-3 shadow-[0px_3.36px_33.6px_0px_rgba(0,0,0,0.06)] sm:px-10">
       <div className="flex items-center gap-3">
         <button
           type="button"
