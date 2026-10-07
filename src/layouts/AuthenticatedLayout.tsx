@@ -12,8 +12,8 @@ export function AuthenticatedLayout({ institutionName, children }: Authenticated
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-bg-gradient-from to-bg-gradient-to p-0 lg:p-10">
-      <div className="flex h-screen w-full max-w-[1633px] overflow-hidden rounded-none border-0 border-white bg-[#f3f5fb] shadow-[0px_4px_53px_0px_rgba(0,0,0,0.1)] lg:h-[936px] lg:rounded-[26.88px] lg:border">
+    <div className="flex h-screen items-center justify-center overflow-hidden bg-gradient-to-r from-bg-gradient-from to-bg-gradient-to p-0">
+      <div className="flex h-full w-full overflow-hidden bg-[#f3f5fb]">
         <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
         <div className="flex flex-1 flex-col overflow-y-auto">
           <Header institutionName={institutionName} onMenuClick={() => setMenuOpen(true)} />

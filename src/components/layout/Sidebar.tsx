@@ -40,7 +40,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-[232px] shrink-0 flex-col gap-10 bg-sidebar px-6 py-10 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 lg:rounded-l-[26.88px] ${
+        className={`fixed inset-y-0 left-0 z-30 flex w-[232px] shrink-0 flex-col gap-10 bg-sidebar px-6 py-10 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
